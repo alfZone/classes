@@ -5,13 +5,26 @@ use classes\db\Database;
 /**
  * this classe implements a generic web service able to read a sql query and return an array or a json string.
  * @author António Lira Fernandes
- * @version 1.1
- * @updated 2021-01-28
+ * @version 1.2
+ * @updated 2021-10-24
  */
 
-//changes:
-//      
+//Methods
+//public function __construct($action, $parameters="") - Class constructor where which $action is a string with the name of an action and $parameters an array 
+//                                                       with the parameters we want to pass to be used in the query
+//public function doAction($accao, $parameters="") - executing an action, typically reading a SQL string and applying the parameters as filters.
+//public function execQuery($query, $parameters) - execute a sql query (insert, delete and update) with the parameters
+//public function execQueryTrace($query, $parameters) - execute a sql query with debug (insert, delete and update) with the parameters
+//private function findParameters($text, $sep=":")  - decompose a string (text) into an array, using sep as a separator
+//public function getQuery($query, $parameters) - read a sql query (select) with the parameters
+//public function lastInsertId() - last insert key
+//public function webService() takes the result array and creates a json
 
+//changes:
+// documentations    
+
+//2do
+// improve Action's method to look at SQL and decide whether to execute or read query. Make the decision based on the use of select or insert, update or delete
 
 ini_set("error_reporting", E_ALL);
 
