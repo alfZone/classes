@@ -6,7 +6,7 @@ use classes\db\Database;
  * this classe implements a generic web service able to read a sql query and return an array or a json string.
  * @author António Lira Fernandes
  * @version 1.4
- * @updated 2021-12-24
+ * @updated 2022-02-24
  */
 
 //Methods
