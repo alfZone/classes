@@ -5,13 +5,14 @@ use classes\db\Database;
 /**
  * this classe implements a generic web service able to read a sql query and return an array or a json string.
  * @author António Lira Fernandes
- * @version 1.3
+ * @version 1.4
  * @updated 2021-12-24
  */
 
 //Methods
 //public function __construct($action, $parameters="") - Class constructor where which $action is a string with the name of an action and $parameters an array 
 //                                                       with the parameters we want to pass to be used in the query
+//punlic function autoExec($query, $parameters) - parses a sql query to determine whether to run or query the database
 //public function doAction($accao, $parameters="") - executing an action, typically reading a SQL string and applying the parameters as filters.
 //public function execQuery($query, $parameters) - execute a sql query (insert, delete and update) with the parameters
 //public function execQueryTrace($query, $parameters) - execute a sql query with debug (insert, delete and update) with the parameters
@@ -21,7 +22,8 @@ use classes\db\Database;
 //public function webService() takes the result array and creates a json
 
 //changes:
-// documentations    
+// documentations   
+// add the autoQuery method 
 
 //2do
 // improve Action's method to look at SQL and decide whether to execute or read query. Make the decision based on the use of select or insert, update or delete
@@ -59,9 +61,9 @@ abstract class LayerDB {
             //Other functions
             break;  
       default:
+          $this->autoQuery($accao, $parameters);
           break;
     }
-
   }*/
  
   
@@ -89,6 +91,25 @@ abstract class LayerDB {
     return $this->lastId;
   }
   
+//##########################################################################################################################################################################
+//parses a sql query to determine whether to run or query the database
+public function autoQuery($query, $parameters){
+  //print_r($this->instrucaoSQL);
+    if (array_key_exists($query, $this->instrucaoSQL)){
+      $aux= strtoupper($this->instrucaoSQL[$query]);
+      $pos = strpos($aux, "SELECT");
+      if ($pos!=0){
+        $this->execQuery($query, $parameters);
+      }else{
+        $this->getQuery($query, $parameters);
+      }
+    }else{
+      $this->results[0]['erro']='Query: ' . $query . ' do not exist!';
+    }
+    //echo $pos;
+  }
+
+
  //##########################################################################################################################################################################
   
   public function webService(){
