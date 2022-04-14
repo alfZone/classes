@@ -98,7 +98,7 @@ public function autoQuery($query, $parameters){
       $aux= strtoupper($this->instrucaoSQL[$query]);
       $pos = strpos($aux, "SELECT");
       //echo "pos=$pos<br>sql=". $this->instrucaoSQL[$query] . " <bR><bR>";
-      if (($pos!=0) || ($pos==null)){
+      if ($pos===false){
         //echo "executar";
         $this->execQuery($query, $parameters);
       }else{
