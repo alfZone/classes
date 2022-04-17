@@ -4,7 +4,7 @@ namespace classes\string;
 /**
  * the idea of this class is to manipulate string
  * @author António Lira Fernandes
- * @version 1.1
+ * @version 1.2
  * @updated 2022-03-12
  */
 
@@ -79,6 +79,19 @@ class Strings{
         return substr($str, -$length);
     }
 
+    //#########################################################################################################################################
+    // Clears special characters in filenames. $string is the text where we intend to replace accented characters and with the same unaccented 
+    // letters, the ç with the c and the spaces with _. Returns a "clean" string.
+	function cleanPoop($string) {
 
+    // input Array
+    $what = array( 'ä','ã','à','á','â','ê','ë','è','é','ï','ì','í','ö','õ','ò','ó','ô','ü','ù','ú','û','À','Á','É','Í','Ó','Ú','ñ','Ñ','ç','Ç',' ','-','(',')',',',';',':','|','!','"','#','$','%','&','/','=','?','~','^','>','<','ª','º' );
+
+    // Output Array
+    $by   = array( 'a','a','a','a','a','e','e','e','e','i','i','i','o','o','o','o','o','u','u','u','u','A','A','E','I','O','U','n','n','c','C','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_' );
+
+    // return string
+    return str_replace($what, $by, $string);
+}
   
 }
