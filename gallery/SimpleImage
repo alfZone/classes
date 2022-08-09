@@ -1,16 +1,19 @@
 <?php
 namespace classes\gallery;
 //
-// ver 4.1
+// ver 5.1
 // SimpleImage
 //
 //  A PHP class that makes working with images as simple as possible.
 //
 //  Developed and maintained by Cory LaViska <https://github.com/claviska>.
 //
-//  Copyright A Beautiful Site, LLC.
+//  Original Copyright A Beautiful Site, LLC.
+//  Minors changes by António Lira Fernandes
 //
-//  Source: https://github.com/claviska/SimpleImage
+//
+//  New Source: https://github.com/alfZone/classes/blob/main/gallery/SimpleImage
+//  Original Source: https://github.com/claviska/SimpleImage
 //
 //  Licensed under the MIT license <http://opensource.org/licenses/MIT>
 //
@@ -43,6 +46,7 @@ namespace classes\gallery;
 //                         (0 - 100). Returns a SimpleImage object.
 // colorize($color) - Applies the colorize filter. $color* (string|array) - The filter color.  Returns a SimpleImage object.
 // contrast($percentage) - Applies the contrast filter. $percentage* (int) - Percentage to adjust (-100 - 100). Returns a SimpleImage object.
+// converToWebp($path, $pathWebp) - Convert a image of jpg, gif or png to a image.webp
 // darken($percentage) - Applies the brightness filter to darken the image. $percentage* (int) - Percentage to darken the image (0 - 100).
 //                       Returns a SimpleImage object.
 // darkenColor($color, $amount) - arkens a color. $color* (string|array) - The color to darken. $amount* (int) - Amount to darken (0 - 255).
@@ -92,13 +96,16 @@ namespace classes\gallery;
 // getColorAt($x, $y) - Gets the RGBA value of a single pixel. $x* (int) - The horizontal position of the pixel. $y* (int) - The vertical 
 //                      position of the pixel. Returns an RGBA color array or false if the x/y position is off the canvas.
 // getExif() - Gets the image's exif data. Returns an array of exif data or null if no data is available.
+// getExtension() - Gets the file extencion.
 // getHeight() - Gets the image's current height. Returns the height as an integer.
 // getMimeType()  - Gets the mime type of the loaded image. Returns a mime type string.
 // getOrientation() - Gets the image's current orientation. Returns a string: 'landscape', 'portrait', or 'square'
 // getWidth() - Gets the image's current width. Returns the width as an integer.
+// gifToWebp($path, $pathWebp)  - Convert a gif to webp
 // imageCopyMergeAlpha($dstIm, $srcIm, $dstX, $dstY, $srcX, $srcY, $srcW, $srcH, $pct) -  Same as PHP's imagecopymerge, but works with 
 //                                                                                        transparent images. Used internally for overlay.                                                                                     
 // invert() - Inverts the image's colors. Returns a SimpleImage object. 
+// jpgToWebp($path, $pathWebp)  - Convert a jpg to webp
 // keepWithin($value, $min, $max) - Ensures a numeric value is always within the min and max range. $value* (int|float) - A numeric value 
 //                                  to test. $min* (int|float) - The minimum allowed value. $max* (int|float) - The maximum allowed value.
 //                                  Returns an int|float value.
@@ -126,6 +133,7 @@ namespace classes\gallery;
 //                                                                                    offset in pixels (default 0). Returns a SimpleImage object.
 // pixelate($size = 10) - Applies the pixelate filter. $size (int) - The size of the blocks in pixels (default 10). Returns a SimpleImage object.
 // polygon($vertices, $color, $thickness = 1) - Draws a polygon. $vertices* (array) - The polygon's vertices in an array of x/y arrays. 
+// pngToWebp($path, $pathWebp)  - Convert a png to webp
 //                                              Example: [ ['x' => x1, 'y' => y1], ['x' => x2, 'y' => y2], ['x' => xN, 'y' => yN] ]
 //                                              $color* (string|array) - The polygon color. $thickness (int|string) - Line thickness in 
 //                                              pixels or 'filled' (default 1). Returns a SimpleImage object.
@@ -185,6 +193,12 @@ namespace classes\gallery;
 // toString($mimeType = null, $quality = 100) - Generates an image string. $mimeType (string) - The image format to output as a mime type 
 //                                              (defaults to the original mime type). $quality (int) - Image quality as a percentage 
 //                                              (default 100). Returns a SimpleImage object.
+//
+// version news:
+//  jpgToWebp($path, $pathWebp)  - Convert a jpg to webp
+//  pngToWebp($path, $pathWebp)  - Convert a png to webp
+//  gifToWebp($path, $pathWebp)  - Convert a png to webp
+//  converToWebp($path, $pathWebp)
 
 class SimpleImage {
 
@@ -275,7 +289,79 @@ class SimpleImage {
 
     return $this;
   }
+  
+  
+  public function getName($path){
+    $file = basename($path);
+    echo $file;
+  }
 
+  public function converToWebp($path, $pathWebp){
+    $aux=explode(".",$path);
+    switch ($aux[count($aux)-1]){
+        case "jpg":
+        case "JPG":
+        case "jpeg":
+        case "JPEG":
+          $this->jpgToWebp($path, $pathWebp);
+          echo "jpg";
+          break;
+        case "png":
+        case "PNG":
+          $this->pngToWebp($path, $pathWebp);
+          //echo "png";
+          break;
+        case "gif":
+        case "GIF":
+          //echo "gif";
+          $this->gifToWebp($path, $pathWebp);
+          break;
+    }
+  }
+  
+  public function gifToWebp($pathGif, $pathWebp){
+     // Load an image from local webp file
+    // Images can be converted into webp 
+    // using imagewebp() function or other
+    // online convertors
+    $im = imagecreatefromgif($pathGif);
+
+    // Convert the image into webp
+    // using imagewebp() function
+    imagejpeg($im, $pathWebp);
+    imagedestroy($im);
+    $im = imagecreatefromjpeg($pathWebp);
+    imagejpeg($im, $pathWebp);
+    imagedestroy($im);
+  }
+  
+  public function jpgToWebp($pathJpg, $pathWebp){
+     // Load an image from local webp file
+    // Images can be converted into webp 
+    // using imagewebp() function or other
+    // online convertors
+    $im = imagecreatefromjpeg($pathJpg);
+
+    // Convert the image into webp
+    // using imagewebp() function
+    imagewebp($im, $pathWebp);
+    imagedestroy($im);
+  }
+  
+  
+  public function pngToWebp($pathPng, $pathWebp){
+     // Load an image from local webp file
+    // Images can be converted into webp 
+    // using imagewebp() function or other
+    // online convertors
+    $im = imagecreatefrompng($pathPng);
+
+    // Convert the image into webp
+    // using imagewebp() function
+    imagewebp($im, $pathWebp);
+    imagedestroy($im);
+  }
+  
   //
   // Loads an image from a file.
   //
@@ -588,6 +674,21 @@ class SimpleImage {
   //
   public function getMimeType() {
     return $this->mimeType;
+  }
+  
+  //
+  // Gets the extension for the loaded image.
+  //
+  // Returns a extension string.
+  //
+  public function getExtension() {
+    $ext=explode("/", $this->mimeType);
+    $ext[1]=str_replace("jpeg", "jpg", $ext[1]);
+    return $ext[1];
+    
+    
+    //$extension = pathinfo($path, PATHINFO_EXTENSION);
+    
   }
 
   //
