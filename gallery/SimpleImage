@@ -99,6 +99,7 @@ namespace classes\gallery;
 // getExtension() - Gets the file extencion.
 // getHeight() - Gets the image's current height. Returns the height as an integer.
 // getMimeType()  - Gets the mime type of the loaded image. Returns a mime type string.
+// getName($path) - get a image name from a complete path
 // getOrientation() - Gets the image's current orientation. Returns a string: 'landscape', 'portrait', or 'square'
 // getWidth() - Gets the image's current width. Returns the width as an integer.
 // gifToWebp($path, $pathWebp)  - Convert a gif to webp
@@ -199,6 +200,7 @@ namespace classes\gallery;
 //  pngToWebp($path, $pathWebp)  - Convert a png to webp
 //  gifToWebp($path, $pathWebp)  - Convert a png to webp
 //  converToWebp($path, $pathWebp)
+//  getName($path) - get a image name from a complete path
 
 class SimpleImage {
 
