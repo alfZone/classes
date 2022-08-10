@@ -1,7 +1,7 @@
 <?php
-namespace classes\gallery;
+namespace classes\galeria;
 //
-// ver 5.1
+// ver 5.2
 // SimpleImage
 //
 //  A PHP class that makes working with images as simple as possible.
@@ -200,7 +200,7 @@ namespace classes\gallery;
 //  pngToWebp($path, $pathWebp)  - Convert a png to webp
 //  gifToWebp($path, $pathWebp)  - Convert a png to webp
 //  converToWebp($path, $pathWebp)
-//  getName($path) - get a image name from a complete path
+// getName($path) - get a image name from a complete path
 
 class SimpleImage {
 
@@ -295,7 +295,7 @@ class SimpleImage {
   
   public function getName($path){
     $file = basename($path);
-    echo $file;
+    return $file;
   }
 
   public function converToWebp($path, $pathWebp){
