@@ -4,7 +4,7 @@ namespace classes\string;
 /**
  * the idea of this class is to manipulate string
  * @author António Lira Fernandes
- * @version 1.2
+ * @version 1.3
  * @updated 2022-03-12
  */
 
@@ -93,5 +93,33 @@ class Strings{
     // return string
     return str_replace($what, $by, $string);
 }
+
+	//#########################################################################################################################################
+	// Clears special characters in filenames. $string is the text where we intend to replace accented characters and with the same unaccented 
+	// letters, the ç with the c and the spaces with _. Returns a "clean" string.
+	function strtolowerPT($string) {
+	
+	    // input Array
+	    $what = array( 'À','Á','É','Í','Ó','Ú','Ñ','Ç','Ã','Õ','Î','Ô','Û','Â','Ê','ì' );
+	
+	    // Output Array
+	    $by   = array( 'à','á','é','í','ó','ú','ñ','ç','ã','õ','î','ô','û','â','ê','ì');
+	
+	    // return string
+	    return str_replace($what, $by, $string);
+	}
   
+  //#########################################################################################################################################
+	// change weekdays to pt.
+	function weekDaysPt($string) {
+	
+	    // input Array
+	    $what = array( 'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday');
+	
+	    // Output Array
+	    $by   = array( 'Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo');
+	
+	    // return string
+	    return str_replace($what, $by, $string);
+	}
 }
