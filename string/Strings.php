@@ -123,3 +123,4 @@ class Strings{
 	    return str_replace($what, $by, $string);
 	}
 }
+
