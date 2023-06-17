@@ -5,15 +5,16 @@ use classes\db\Database;
 /**
  * this classe implements a generic web service able to read a sql query and return an array or a json string.
  * @author António Lira Fernandes
- * @version 2.0
- * @updated 2022-05-24
+ * @version 3.0
+ * @updated 2023-05-24
  * https://github.com/alfZone/DataBase
  */
 
 //Methods
 //public function __construct($action, $parameters="") - Class constructor where which $action is a string with the name of an action and $parameters an array 
 //                                                       with the parameters we want to pass to be used in the query
-//punlic function autoExec($query, $parameters) - parses a sql query to determine whether to run or query the database
+//public function addRecordset($newResults) - Add a set of records in the results. Atention a estruture isn't compare
+//public function autoExec($query, $parameters) - parses a sql query to determine whether to run or query the database
 //public function doAction($accao, $parameters="") - executing an action, typically reading a SQL string and applying the parameters as filters.
 //public function execQuery($query, $parameters) - execute a sql query (insert, delete and update) with the parameters
 //public function execQueryTrace($query, $parameters) - execute a sql query with debug (insert, delete and update) with the parameters
@@ -40,6 +41,7 @@ abstract class LayerDB {
   public $rowCount;
  
  public function __construct($accao="", $parameters=""){
+    $this->results[0]['numElements']=0;
     $this->doAction($accao, $parameters);
   } 
   
@@ -197,6 +199,31 @@ public function autoQuery($query, $parameters){
     $this->results[0]['numRows']=$database->rowCount();
     $database->debugDumpParams();
     
+  }
+
+  public function addResults($newResults) {
+    //echo "<hr>ssss<hr>";
+    //print_r($this->results);
+
+    //echo "<hr>tttt<hr>";
+    //print_r($newResults);
+    $i=$this->results[0]['numElements'];
+    //echo "<hr>i=$i<hr>";
+    //echo "<hr>XX<hr>";
+    //print_r($this->results);
+    foreach($newResults as $line){
+      //echo "<hr>ssss<hr>";
+      //print_r($line);
+      $this->results[$i]=$line;
+      $i++;
+      //echo "<hr>i=$i<hr>";
+      //echo "<hr>ttt<hr>";
+      //print_r($this->results);
+    }
+    $this->results[0]['numElements']=$i;
+    //echo "<hr>ttt   i=$i<hr>";
+    //print_r($this->results);
+    //echo "<hr>KKK   i=$i<hr>";
   }
 
 }
