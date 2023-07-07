@@ -32,6 +32,13 @@
  ## public function getUrlPart($pos,$order="normal")
  This method return a part of the url located in the position $pos starting from tbe left, by default, or conting from right suplaying $order!="normal". 
 
+http://www.domain.com/part1/part2/part3/part3/last
+```
+ $url=new URL();
+ $param3=$url->getUrlPart(3);
+ $last=$url->getUrlPart(1,"i");
+```
+
 2 - What's new
 ==============
 
