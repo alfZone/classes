@@ -1,74 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-<input type="file" id="fileInput">
-<button id="uploadButton">Fazer Upload</button>
-</body>
+<?php
+$targetDir = "uploads/";
 
-<script>
+if (!file_exists($targetDir)) {
+    mkdir($targetDir, 0777, true); // cria a pasta se não existir
+}
 
-const uploadFile1 = async () => {
-    const fileInput = document.querySelector("#fileInput");
-    const file = fileInput.files[0];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+        $fileTmp = $_FILES['file']['tmp_name'];
+        $fileName = basename($_FILES['file']['name']);
+        $targetFile = $targetDir . $fileName;
 
-    if (!file) {
-        console.error("Nenhum arquivo selecionado!");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-        const response = await fetch("https://galeria.esmonserrate.org/classes/files/upload.php", {
-            method: "POST",
-            body: formData,
-        });
-
-        if (!response.ok) throw new Error("Erro ao fazer upload");
-
-        const result = await response.json();
-        console.log("Sucesso:", result);
-    } catch (error) {
-        console.error("Erro:", error);
-    }
-};
-
-
-    const uploadFile = async () => {
-        alert("Fazendo upload do arquivo...");
-        const fileInput = document.querySelector("#fileInput");
-        const file = fileInput.files[0];
-
-        if (!file) {
-            console.error("Nenhum arquivo selecionado!");
-            return;
+        if (move_uploaded_file($fileTmp, $targetFile)) {
+            echo json_encode(["message" => "Upload feito com sucesso!"]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["error" => "Erro ao mover o arquivo."]);
         }
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Nenhum arquivo enviado ou erro no upload."]);
+    }
+} else {
+    if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    
+        $headers = getallheaders();
+        $fileName = isset($headers['X-Filename']) ? basename($headers['X-Filename']) : 'arquivo_recebido.bin';
 
-        try {
-            const response = await fetch("https://galeria.esmonserrate.org/classes/files/upload.php", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": file.type, // Define o tipo de conteúdo
-                },
-                body: file, // Envia o arquivo diretamente
-            });
+        // segurança básica
+        $fileName = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $fileName);
 
-            if (!response.ok) throw new Error("Erro ao fazer upload");
-
-            const result = await response.json();
-            console.log("Sucesso:", result);
-        } catch (error) {
-            console.error("Erro:", error);
+        $targetFile = $targetDir . $fileName;
+    
+        $putData = fopen("php://input", "rb");
+        $outFile = fopen($targetFile, "wb");
+    
+        if ($putData && $outFile) {
+            while ($chunk = fread($putData, 1024)) {
+                fwrite($outFile, $chunk);
+            }
+            fclose($putData);
+            fclose($outFile);
+            echo json_encode(["message" => "Upload via PUT concluído com sucesso!"]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["error" => "Erro ao processar o arquivo."]);
         }
-    };
-    
-    document.querySelector("#uploadButton").addEventListener("click", uploadFile);
-</script>
-    
-</html>
+    } else {
+        http_response_code(405);
+        echo json_encode(["error" => "Métodos (post e put) não permitido."]);
+    }
+}
+
+
