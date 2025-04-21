@@ -1,55 +1,53 @@
 <?php
-$targetDir = "uploads/";
+require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../bootstrap.php';
+//echo __DIR__;
+use classes\files\UploadC;
+$targetDir = "uploads/"
+?>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <title>upload de ficheiro</title>
+</head>
+<body>
+    <h1><?=$targetDir?></h1>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Nome do Ficheiro</th>
+                <th>Tamanho</th>
+                <th>Última Modificação</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>...</td>
+                <td>.... KB</td>
+                <td>...</td>
+            </tr>
+        </tbody>
+    </table>
 
-if (!file_exists($targetDir)) {
-    mkdir($targetDir, 0777, true); // cria a pasta se não existir
-}
+<input type="file" id="fileInput">
+<button id="uploadButton">Fazer Upload</button>
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-        $fileTmp = $_FILES['file']['tmp_name'];
-        $fileName = basename($_FILES['file']['name']);
-        $targetFile = $targetDir . $fileName;
 
-        if (move_uploaded_file($fileTmp, $targetFile)) {
-            echo json_encode(["message" => "Upload feito com sucesso!"]);
-        } else {
-            http_response_code(500);
-            echo json_encode(["error" => "Erro ao mover o arquivo."]);
-        }
-    } else {
-        http_response_code(400);
-        echo json_encode(["error" => "Nenhum arquivo enviado ou erro no upload."]);
-    }
-} else {
-    if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+<script>
+
+    <?php
+    $a= new UploadC($targetDir);
+    $a->JSUploadFileUsingPUT("https://galeria.esmonserrate.org/classes/files/UploadC.php");
+    ?>
     
-        $headers = getallheaders();
-        $fileName = isset($headers['X-Filename']) ? basename($headers['X-Filename']) : 'arquivo_recebido.bin';
-
-        // segurança básica
-        $fileName = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $fileName);
-
-        $targetFile = $targetDir . $fileName;
+    document.querySelector("#uploadButton").addEventListener("click", uploadFile);
+</script>
     
-        $putData = fopen("php://input", "rb");
-        $outFile = fopen($targetFile, "wb");
-    
-        if ($putData && $outFile) {
-            while ($chunk = fread($putData, 1024)) {
-                fwrite($outFile, $chunk);
-            }
-            fclose($putData);
-            fclose($outFile);
-            echo json_encode(["message" => "Upload via PUT concluído com sucesso!"]);
-        } else {
-            http_response_code(500);
-            echo json_encode(["error" => "Erro ao processar o arquivo."]);
-        }
-    } else {
-        http_response_code(405);
-        echo json_encode(["error" => "Métodos (post e put) não permitido."]);
-    }
-}
-
-
+</html>
