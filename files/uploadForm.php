@@ -44,7 +44,7 @@ $targetDir = "uploads/"
 
     <?php
     $a= new UploadC($targetDir);
-    $a->JSUploadFileUsingPUT("https://galeria.esmonserrate.org/classes/files/UploadC.php");
+    $a->JSUploadFileUsingPUT("https://WWW.DOMAIN.COM/PATH TO CLASSE/UploadC.php");
     ?>
     
     document.querySelector("#uploadButton").addEventListener("click", uploadFile);
