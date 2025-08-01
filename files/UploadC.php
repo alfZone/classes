@@ -18,13 +18,13 @@ class UploadC {
     /**
 	 * Caminho para o diretório de upload
 	 */
-	var $targetDir = "uploads/";
+	var $targetDir = "PATH TO UPLAOD FOLDER/";
 
     /**
      * Construtor da classe
      * @param string $targetDir Caminho para o diretório de upload
      */
-    function __construct($targetDir = "uploads/") {
+    function __construct($targetDir = "PATH TO UPLAOD FOLDER/") {
         $this->targetDir = $targetDir;
         if (!file_exists($targetDir)) {
             mkdir($targetDir, 0777, true); // cria a pasta se não existir
